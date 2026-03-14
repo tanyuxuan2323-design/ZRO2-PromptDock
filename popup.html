@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ZRO2 PromptDock</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand brand-showcase">
+        <span class="brand-logo-shell">
+          <img class="brand-logo" src="zro2-logo.png" alt="ZRO2 logo">
+        </span>
+        <h1>ZRO2</h1>
+      </div>
+
+      <div class="topbar-autosave">
+        <div class="setting-row setting-row-compact">
+          <div class="setting-copy">
+            <strong>&#x81EA;&#x52A8;&#x4FDD;&#x5B58;</strong>
+          </div>
+          <button id="autoSaveToggle" class="switch" type="button" aria-label="&#x81EA;&#x52A8;&#x4FDD;&#x5B58;"></button>
+        </div>
+
+        <div id="autoSaveControls" class="autosave-controls hidden">
+          <button id="chooseAutoSaveFolder" class="folder-button" type="button">&#x9009;&#x62E9;&#x4FDD;&#x5B58;&#x6587;&#x4EF6;&#x5939;</button>
+          <p id="autoSaveFolderHint" class="autosave-folder-hint">&#x8FD8;&#x6CA1;&#x6709;&#x9009;&#x62E9;&#x6587;&#x4EF6;&#x5939;</p>
+        </div>
+      </div>
+    </header>
+
+    <section class="panel-section">
+      <div class="setting-row">
+        <div class="setting-copy">
+          <strong>&#x9690;&#x85CF;&#x63D0;&#x793A;&#x8BCD;&#x7BA1;&#x7406;&#x5668;</strong>
+        </div>
+        <button id="autoHideToggle" class="switch" type="button" aria-label="&#x9690;&#x85CF;&#x63D0;&#x793A;&#x8BCD;&#x7BA1;&#x7406;&#x5668;"></button>
+      </div>
+    </section>
+
+    <section class="panel-section">
+      <div class="section-head">
+        <strong>&#x663E;&#x793A;&#x8303;&#x56F4;</strong>
+      </div>
+
+      <div id="displayModeGroup" class="mode-group" role="radiogroup" aria-label="&#x663E;&#x793A;&#x8303;&#x56F4;">
+        <button id="displayModeChatgpt" class="mode-button" type="button" data-mode="chatgpt_only" role="radio">
+          <strong>&#x4EC5;&#x5728; ChatGPT &#x663E;&#x793A;</strong>
+        </button>
+        <button id="displayModeAll" class="mode-button" type="button" data-mode="all_sites" role="radio">
+          <strong>&#x5168;&#x6D4F;&#x89C8;&#x5668;&#x663E;&#x793A;</strong>
+        </button>
+      </div>
+    </section>
+
+    <section class="panel-section">
+      <div class="section-head">
+        <strong>&#x5FEB;&#x6377;&#x64CD;&#x4F5C;</strong>
+      </div>
+
+      <div class="action-stack">
+        <label class="action file-button">
+          <span>&#x5BFC;&#x5165; JSON</span>
+          <input id="importInput" type="file" accept="application/json">
+        </label>
+      </div>
+    </section>
+
+    <p id="statusMessage" class="status-message hidden"></p>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>

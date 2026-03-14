@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "ZRO2 PromptDock",
+  "description": "Drop in good prompts, keep your favorites nearby, and send them into ChatGPT with a click. Small, simple, and fun to use together.",
+  "version": "2.0.8",
+  "icons": {
+    "16": "zro2-logo.png",
+    "32": "zro2-logo.png",
+    "48": "zro2-logo.png",
+    "128": "zro2-logo.png"
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "alarms",
+    "offscreen"
+  ],
+  "host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
+  "action": {
+    "default_title": "ZRO2 PromptDock",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "zro2-logo.png",
+      "32": "zro2-logo.png",
+      "48": "zro2-logo.png",
+      "128": "zro2-logo.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*/*",
+        "http://*/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

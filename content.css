@@ -1,0 +1,1642 @@
+#gpt-voyager-root {
+  all: initial;
+  --gv-bg-page: #0b1220;
+  --gv-bg-panel: rgba(15, 24, 39, 0.96);
+  --gv-bg-panel-2: rgba(19, 31, 49, 0.96);
+  --gv-bg-surface: rgba(22, 34, 54, 0.96);
+  --gv-bg-surface-2: rgba(27, 42, 66, 0.98);
+  --gv-bg-elevated: rgba(31, 47, 72, 0.98);
+  --gv-border-subtle: rgba(145, 168, 205, 0.10);
+  --gv-border-default: rgba(145, 168, 205, 0.16);
+  --gv-border-strong: rgba(145, 168, 205, 0.24);
+  --gv-text-primary: #eef4ff;
+  --gv-text-secondary: #c7d5eb;
+  --gv-text-tertiary: #91a5c3;
+  --gv-text-muted: #6e829f;
+  --gv-accent-300: #76e6bc;
+  --gv-accent-400: #4ed7a2;
+  --gv-accent-500: #31c58d;
+  --gv-accent-600: #23a874;
+  --gv-danger: #d66f7b;
+  --gv-danger-strong: #c25664;
+  --gv-favorite: #d8c56e;
+  --gv-shadow-sm: 0 10px 20px rgba(0, 0, 0, 0.16);
+  --gv-shadow-md: 0 18px 36px rgba(0, 0, 0, 0.22);
+  --gv-shadow-lg: 0 32px 68px rgba(0, 0, 0, 0.34);
+  --gv-radius-sm: 10px;
+  --gv-radius-md: 14px;
+  --gv-radius-lg: 18px;
+  --gv-radius-xl: 24px;
+  --gv-space-4: 4px;
+  --gv-space-8: 8px;
+  --gv-space-12: 12px;
+  --gv-space-16: 16px;
+  --gv-space-20: 20px;
+  --gv-space-24: 24px;
+  --gv-space-32: 32px;
+}
+
+#gpt-voyager-root,
+#gpt-voyager-root * {
+  box-sizing: border-box;
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+#gpt-voyager-root button,
+#gpt-voyager-root input,
+#gpt-voyager-root textarea,
+#gpt-voyager-root label {
+  font: inherit;
+}
+
+#gpt-voyager-root .gv-hidden {
+  display: none !important;
+}
+
+#gpt-voyager-root.gv-root-host-hidden {
+  display: none !important;
+}
+
+#gpt-voyager-root .gv-shell {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2147483000;
+  display: flex;
+  gap: 12px;
+  color: var(--gv-text-primary);
+}
+
+#gpt-voyager-root .gv-shell.gv-shell-interacting {
+  transition: none;
+}
+
+#gpt-voyager-root .gv-shell.gv-shell-expand-left {
+  align-items: flex-end;
+}
+
+#gpt-voyager-root .gv-shell.gv-shell-expand-right {
+  align-items: flex-start;
+}
+
+#gpt-voyager-root .gv-shell.gv-shell-expand-up {
+  flex-direction: column;
+}
+
+#gpt-voyager-root .gv-shell.gv-shell-expand-down {
+  flex-direction: column-reverse;
+}
+
+#gpt-voyager-root .gv-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  min-height: 520px;
+  max-width: calc(100vw - 16px);
+  max-height: calc(100vh - 86px);
+  overflow: hidden;
+  resize: none;
+  border-radius: var(--gv-radius-xl);
+  border: 1px solid var(--gv-border-default);
+  background:
+    radial-gradient(circle at top right, rgba(71, 215, 161, 0.10), transparent 28%),
+    linear-gradient(180deg, rgba(17, 27, 43, 0.98), rgba(12, 20, 33, 0.98));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    var(--gv-shadow-lg);
+  backdrop-filter: blur(18px);
+  will-change: transform, opacity;
+  container-type: size;
+}
+
+#gpt-voyager-root .gv-panel.gv-panel-resizing .gv-card {
+  min-height: 146px;
+  content-visibility: hidden;
+  contain: strict;
+  contain-intrinsic-size: 146px;
+}
+
+#gpt-voyager-root .gv-panel.gv-panel-resizing .gv-card > * {
+  visibility: hidden;
+}
+
+#gpt-voyager-root .gv-panel.gv-panel-resizing .gv-list-wrap {
+  overflow: hidden;
+}
+
+#gpt-voyager-root .gv-panel-resize-handle {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  display: grid;
+  place-items: start;
+  background: transparent;
+  opacity: 1;
+  z-index: 16;
+  appearance: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+#gpt-voyager-root .gv-panel-resize-handle-top-left {
+  top: 3px;
+  left: 3px;
+  cursor: nwse-resize;
+}
+
+#gpt-voyager-root .gv-panel-resize-handle-bottom-right {
+  right: 3px;
+  bottom: 3px;
+  cursor: nwse-resize;
+  place-items: end;
+}
+
+#gpt-voyager-root .gv-panel-resize-handle:hover {
+  background: transparent;
+}
+
+#gpt-voyager-root .gv-panel-resize-grip {
+  width: 10px;
+  height: 10px;
+  display: block;
+  transform: rotate(180deg);
+  transform-origin: center;
+  background:
+    linear-gradient(135deg, transparent 0 50%, rgba(145, 168, 205, 0.16) 50% 60%, transparent 60% 100%),
+    linear-gradient(135deg, transparent 0 68%, rgba(78, 215, 162, 0.26) 68% 78%, transparent 78% 100%);
+  opacity: 0.96;
+}
+
+#gpt-voyager-root .gv-panel-resize-grip-bottom-right {
+  transform: none;
+}
+
+#gpt-voyager-root .gv-panel-resize-handle:hover .gv-panel-resize-grip {
+  filter: brightness(1.06);
+}
+
+#gpt-voyager-root .gv-panel-resize-handle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(78, 215, 162, 0.18);
+}
+
+#gpt-voyager-root .gv-header,
+#gpt-voyager-root .gv-toolbar,
+#gpt-voyager-root .gv-editor,
+#gpt-voyager-root .gv-list-wrap,
+#gpt-voyager-root .gv-footer {
+  padding: var(--gv-space-16);
+}
+
+#gpt-voyager-root .gv-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: move;
+}
+
+#gpt-voyager-root .gv-header-main,
+#gpt-voyager-root .gv-title-row,
+#gpt-voyager-root .gv-header-actions,
+#gpt-voyager-root .gv-toolbar-top,
+#gpt-voyager-root .gv-card-head,
+#gpt-voyager-root .gv-card-top-actions,
+#gpt-voyager-root .gv-card-actions,
+#gpt-voyager-root .gv-modal-actions,
+#gpt-voyager-root .gv-setting-actions,
+#gpt-voyager-root .gv-modal-head,
+#gpt-voyager-root .gv-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-8);
+}
+
+#gpt-voyager-root .gv-header-main {
+  min-width: 0;
+  position: relative;
+  gap: 8px;
+}
+
+#gpt-voyager-root .gv-title-stack {
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+
+#gpt-voyager-root .gv-title-row {
+  gap: 6px;
+}
+
+#gpt-voyager-root .gv-brand-mark {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  color: #092116;
+  background: linear-gradient(180deg, var(--gv-accent-300), var(--gv-accent-500));
+  box-shadow: 0 10px 20px rgba(49, 197, 141, 0.18);
+}
+
+#gpt-voyager-root .gv-brand-mark .gv-svg-icon {
+  width: 14px;
+  height: 14px;
+}
+
+#gpt-voyager-root .gv-brand-trigger {
+  cursor: pointer;
+}
+
+#gpt-voyager-root .gv-brand-trigger:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 1px rgba(118, 230, 188, 0.14),
+    0 12px 22px rgba(49, 197, 141, 0.22);
+}
+
+#gpt-voyager-root .gv-title-row h2,
+#gpt-voyager-root .gv-editor-head h3,
+#gpt-voyager-root .gv-modal-card h3,
+#gpt-voyager-root .gv-card-title {
+  margin: 0;
+  color: var(--gv-text-primary);
+}
+
+#gpt-voyager-root .gv-title-row h2 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+#gpt-voyager-root .gv-summary {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.25;
+  color: var(--gv-text-tertiary);
+  opacity: 0.8;
+}
+
+#gpt-voyager-root .gv-badge,
+#gpt-voyager-root .gv-chip,
+#gpt-voyager-root .gv-file,
+#gpt-voyager-root .gv-btn,
+#gpt-voyager-root .gv-icon-btn,
+#gpt-voyager-root .gv-card-icon-btn,
+#gpt-voyager-root .gv-switch,
+#gpt-voyager-root .gv-inline-btn {
+  border: 1px solid var(--gv-border-default);
+  border-radius: var(--gv-radius-md);
+  background: rgba(24, 38, 59, 0.92);
+  color: var(--gv-text-primary);
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease,
+    color 0.18s ease;
+}
+
+#gpt-voyager-root .gv-btn:hover,
+#gpt-voyager-root .gv-file:hover,
+#gpt-voyager-root .gv-chip:hover,
+#gpt-voyager-root .gv-icon-btn:hover,
+#gpt-voyager-root .gv-card-icon-btn:hover,
+#gpt-voyager-root .gv-switch:hover,
+#gpt-voyager-root .gv-inline-btn:hover,
+#gpt-voyager-root .gv-empty-action:hover {
+  transform: translateY(-1px);
+  border-color: var(--gv-border-strong);
+  background: var(--gv-bg-elevated);
+}
+
+#gpt-voyager-root .gv-btn-primary:hover,
+#gpt-voyager-root .gv-btn-primary:focus-visible,
+#gpt-voyager-root .gv-chip-active:hover,
+#gpt-voyager-root .gv-chip-active:focus-visible,
+#gpt-voyager-root .gv-switch-active:hover,
+#gpt-voyager-root .gv-switch-active:focus-visible {
+  color: #081b12;
+  border-color: transparent;
+  background: linear-gradient(180deg, var(--gv-accent-400), var(--gv-accent-500));
+  box-shadow:
+    0 0 0 1px rgba(118, 230, 188, 0.18),
+    0 14px 28px rgba(49, 197, 141, 0.24),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.18);
+}
+
+#gpt-voyager-root .gv-btn:focus-visible,
+#gpt-voyager-root .gv-file:focus-visible,
+#gpt-voyager-root .gv-chip:focus-visible,
+#gpt-voyager-root .gv-icon-btn:focus-visible,
+#gpt-voyager-root .gv-card-icon-btn:focus-visible,
+#gpt-voyager-root .gv-switch:focus-visible,
+#gpt-voyager-root .gv-inline-btn:focus-visible,
+#gpt-voyager-root .gv-search:focus-visible,
+#gpt-voyager-root .gv-input:focus-visible,
+#gpt-voyager-root .gv-textarea:focus-visible,
+#gpt-voyager-root .gv-fab:focus-visible,
+#gpt-voyager-root .gv-empty-action:focus-visible {
+  outline: none;
+  border-color: rgba(78, 215, 162, 0.74);
+  box-shadow: 0 0 0 3px rgba(78, 215, 162, 0.14);
+}
+
+#gpt-voyager-root .gv-btn,
+#gpt-voyager-root .gv-file,
+#gpt-voyager-root .gv-inline-btn {
+  min-height: 40px;
+  padding: 0 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+#gpt-voyager-root .gv-btn:disabled,
+#gpt-voyager-root .gv-file:disabled,
+#gpt-voyager-root .gv-switch:disabled {
+  opacity: 0.56;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+#gpt-voyager-root .gv-btn-primary,
+#gpt-voyager-root .gv-chip-active,
+#gpt-voyager-root .gv-switch-active {
+  border-color: transparent;
+  color: #081b12;
+  font-weight: 700;
+  background: linear-gradient(180deg, var(--gv-accent-400), var(--gv-accent-500));
+  box-shadow: 0 10px 22px rgba(49, 197, 141, 0.18);
+}
+
+#gpt-voyager-root .gv-btn-danger,
+#gpt-voyager-root .gv-inline-btn-danger {
+  color: #ffd3da;
+  border-color: rgba(214, 111, 123, 0.28);
+  background: rgba(79, 28, 38, 0.72);
+}
+
+#gpt-voyager-root .gv-header-new {
+  min-width: 128px;
+  min-height: 36px;
+  padding: 0 12px;
+  gap: 8px;
+}
+
+#gpt-voyager-root .gv-header-new .gv-btn-icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
+#gpt-voyager-root .gv-header-new-label {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  transform: translateY(-0.5px);
+}
+
+#gpt-voyager-root .gv-header-new:disabled.gv-header-new-disabled {
+  color: rgba(199, 211, 231, 0.72);
+  border-color: rgba(123, 140, 170, 0.18);
+  background: linear-gradient(180deg, rgba(34, 47, 69, 0.96), rgba(24, 35, 54, 0.94));
+  box-shadow: none;
+  opacity: 1;
+}
+
+#gpt-voyager-root .gv-header-new:disabled.gv-header-new-disabled .gv-btn-icon,
+#gpt-voyager-root .gv-header-new:disabled.gv-header-new-disabled .gv-svg-icon {
+  opacity: 0.68;
+}
+
+#gpt-voyager-root .gv-badge {
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  color: var(--gv-text-secondary);
+  background: rgba(32, 46, 70, 0.96);
+}
+
+#gpt-voyager-root .gv-header .gv-icon-btn {
+  min-width: 32px;
+  height: 32px;
+}
+
+#gpt-voyager-root .gv-quick-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: min(356px, calc(100vw - 32px));
+  max-height: min(70vh, 620px);
+  overflow: auto;
+  z-index: 4;
+  padding: 12px;
+  border: 1px solid var(--gv-border-default);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at top right, rgba(71, 215, 161, 0.08), transparent 32%),
+    linear-gradient(180deg, rgba(17, 27, 43, 0.98), rgba(12, 20, 33, 0.98));
+  box-shadow: var(--gv-shadow-lg);
+  backdrop-filter: blur(18px);
+}
+
+#gpt-voyager-root .gv-quick-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+#gpt-voyager-root .gv-quick-panel::-webkit-scrollbar-thumb {
+  background: rgba(134, 154, 189, 0.32);
+  border-radius: 999px;
+}
+
+#gpt-voyager-root .gv-quick-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#gpt-voyager-root .gv-quick-section {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(117, 138, 171, 0.14);
+  border-radius: 16px;
+  background: rgba(20, 32, 51, 0.74);
+}
+
+#gpt-voyager-root .gv-quick-section + .gv-quick-section {
+  margin-top: 10px;
+}
+
+#gpt-voyager-root .gv-quick-section-head,
+#gpt-voyager-root .gv-site-custom-head {
+  display: grid;
+  gap: 3px;
+}
+
+#gpt-voyager-root .gv-quick-section-head strong,
+#gpt-voyager-root .gv-site-custom-head strong {
+  font-size: 12px;
+  color: var(--gv-text-primary);
+}
+
+#gpt-voyager-root .gv-quick-section-head span,
+#gpt-voyager-root .gv-site-custom-head span,
+#gpt-voyager-root .gv-site-hint,
+#gpt-voyager-root .gv-quick-setting-row .gv-setting-copy span {
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--gv-text-tertiary);
+}
+
+#gpt-voyager-root .gv-quick-setting-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  min-height: 40px;
+}
+
+#gpt-voyager-root .gv-display-mode-group,
+#gpt-voyager-root .gv-quick-action-stack {
+  display: grid;
+  gap: 8px;
+}
+
+#gpt-voyager-root .gv-display-mode-button {
+  min-height: 40px;
+  padding: 0 13px;
+  border: 1px solid rgba(117, 138, 171, 0.16);
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at top, rgba(77, 220, 171, 0.06), transparent 58%),
+    rgba(22, 34, 54, 0.92);
+  color: var(--gv-text-primary);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+  justify-content: flex-start;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease,
+    color 0.18s ease;
+}
+
+#gpt-voyager-root .gv-display-mode-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(145, 168, 205, 0.24);
+  background:
+    radial-gradient(circle at top, rgba(92, 231, 184, 0.12), transparent 58%),
+    rgba(27, 42, 66, 0.98);
+}
+
+#gpt-voyager-root .gv-display-mode-button-active {
+  color: #081b12;
+  border-color: transparent;
+  background: linear-gradient(180deg, var(--gv-accent-400), var(--gv-accent-500));
+  box-shadow: 0 10px 22px rgba(49, 197, 141, 0.18);
+}
+
+#gpt-voyager-root .gv-quick-action {
+  min-height: 34px;
+  font-size: 12px;
+}
+
+#gpt-voyager-root .gv-btn-icon,
+#gpt-voyager-root .gv-chip-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+#gpt-voyager-root .gv-svg-icon {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+#gpt-voyager-root .gv-svg-icon-fab-logo {
+  width: 35px;
+  height: 35px;
+}
+
+#gpt-voyager-root .gv-icon-btn,
+#gpt-voyager-root .gv-card-icon-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+#gpt-voyager-root .gv-status {
+  position: absolute;
+  top: 76px;
+  right: 16px;
+  z-index: 8;
+  max-width: 248px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--gv-border-strong);
+  background: rgba(12, 20, 34, 0.96);
+  color: var(--gv-text-primary);
+  font-size: 12px;
+  line-height: 1.5;
+  box-shadow: var(--gv-shadow-md);
+}
+
+#gpt-voyager-root .gv-status-quiet {
+  color: var(--gv-accent-300);
+}
+
+#gpt-voyager-root .gv-toolbar,
+#gpt-voyager-root .gv-footer {
+  padding: 8px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#gpt-voyager-root .gv-toolbar {
+  display: grid;
+  gap: 3px;
+}
+
+#gpt-voyager-root .gv-toolbar-top {
+  position: relative;
+  display: block;
+  min-height: 40px;
+  min-width: 0;
+}
+
+#gpt-voyager-root .gv-search,
+#gpt-voyager-root .gv-input,
+#gpt-voyager-root .gv-textarea {
+  width: 100%;
+  border: 1px solid var(--gv-border-default);
+  border-radius: var(--gv-radius-md);
+  background: rgba(19, 31, 49, 0.92);
+  color: var(--gv-text-primary);
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+#gpt-voyager-root .gv-search {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding-right: 88px;
+}
+
+#gpt-voyager-root .gv-search::placeholder,
+#gpt-voyager-root .gv-input::placeholder,
+#gpt-voyager-root .gv-textarea::placeholder {
+  color: var(--gv-text-muted);
+}
+
+#gpt-voyager-root .gv-chip {
+  min-height: 27px;
+  padding: 0 8px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 11px;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+#gpt-voyager-root .gv-chip-filter {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 72px;
+  height: 100%;
+  min-height: 40px;
+  padding: 0 10px;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+#gpt-voyager-root .gv-tag-rail {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 6px;
+  align-items: center;
+  margin-top: 0;
+  min-height: 34px;
+  padding: 3px 0 0;
+}
+
+#gpt-voyager-root .gv-tag-scroll,
+#gpt-voyager-root .gv-modal,
+#gpt-voyager-root .gv-list-wrap,
+#gpt-voyager-root .gv-settings-list,
+#gpt-voyager-root .gv-editor,
+#gpt-voyager-root .gv-textarea,
+#gpt-voyager-root .gv-tag-suggestions {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(92, 108, 133, 0.76) rgba(11, 21, 37, 0.68);
+}
+
+#gpt-voyager-root .gv-tag-scroll::-webkit-scrollbar,
+#gpt-voyager-root .gv-modal::-webkit-scrollbar,
+#gpt-voyager-root .gv-list-wrap::-webkit-scrollbar,
+#gpt-voyager-root .gv-settings-list::-webkit-scrollbar,
+#gpt-voyager-root .gv-editor::-webkit-scrollbar,
+#gpt-voyager-root .gv-textarea::-webkit-scrollbar,
+#gpt-voyager-root .gv-tag-suggestions::-webkit-scrollbar {
+  width: 8px;
+  height: 6px;
+}
+
+#gpt-voyager-root .gv-tag-scroll::-webkit-scrollbar-track,
+#gpt-voyager-root .gv-modal::-webkit-scrollbar-track,
+#gpt-voyager-root .gv-list-wrap::-webkit-scrollbar-track,
+#gpt-voyager-root .gv-settings-list::-webkit-scrollbar-track,
+#gpt-voyager-root .gv-editor::-webkit-scrollbar-track,
+#gpt-voyager-root .gv-textarea::-webkit-scrollbar-track,
+#gpt-voyager-root .gv-tag-suggestions::-webkit-scrollbar-track {
+  background: rgba(11, 21, 37, 0.68);
+  border-radius: 999px;
+}
+
+#gpt-voyager-root .gv-tag-scroll::-webkit-scrollbar-thumb,
+#gpt-voyager-root .gv-modal::-webkit-scrollbar-thumb,
+#gpt-voyager-root .gv-list-wrap::-webkit-scrollbar-thumb,
+#gpt-voyager-root .gv-settings-list::-webkit-scrollbar-thumb,
+#gpt-voyager-root .gv-editor::-webkit-scrollbar-thumb,
+#gpt-voyager-root .gv-textarea::-webkit-scrollbar-thumb,
+#gpt-voyager-root .gv-tag-suggestions::-webkit-scrollbar-thumb {
+  border: 1px solid rgba(11, 21, 37, 0.68);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(104, 120, 146, 0.88), rgba(68, 82, 106, 0.82));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+#gpt-voyager-root .gv-tag-scroll::-webkit-scrollbar-thumb:hover,
+#gpt-voyager-root .gv-modal::-webkit-scrollbar-thumb:hover,
+#gpt-voyager-root .gv-list-wrap::-webkit-scrollbar-thumb:hover,
+#gpt-voyager-root .gv-settings-list::-webkit-scrollbar-thumb:hover,
+#gpt-voyager-root .gv-editor::-webkit-scrollbar-thumb:hover,
+#gpt-voyager-root .gv-textarea::-webkit-scrollbar-thumb:hover,
+#gpt-voyager-root .gv-tag-suggestions::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(122, 138, 164, 0.94), rgba(78, 94, 118, 0.88));
+}
+
+#gpt-voyager-root .gv-tag-scroll,
+#gpt-voyager-root .gv-tags {
+  min-width: 0;
+  display: flex;
+  gap: 5px;
+  white-space: nowrap;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+}
+
+#gpt-voyager-root .gv-tag-scroll {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  height: 30px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 1px 1px 0 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior-x: contain;
+  overflow-anchor: none;
+}
+
+#gpt-voyager-root .gv-tags {
+  width: 100%;
+  overflow: hidden;
+  scrollbar-width: none;
+}
+
+#gpt-voyager-root .gv-tag-scroll::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+#gpt-voyager-root .gv-editor {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  gap: clamp(10px, 1.8cqh, 16px);
+  min-height: 0;
+  overflow: auto;
+  background: rgba(8, 13, 24, 0.56);
+}
+
+#gpt-voyager-root .gv-editor-head {
+  display: grid;
+  gap: 3px;
+  flex: 0 0 auto;
+}
+
+#gpt-voyager-root .gv-editor-head h3 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+#gpt-voyager-root .gv-editor-head p,
+#gpt-voyager-root .gv-modal-head p,
+#gpt-voyager-root .gv-setting-copy span,
+#gpt-voyager-root .gv-empty span,
+#gpt-voyager-root .gv-card-text,
+#gpt-voyager-root .gv-summary {
+  color: var(--gv-text-secondary);
+}
+
+#gpt-voyager-root .gv-form {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: clamp(10px, 1.7cqh, 14px);
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+#gpt-voyager-root .gv-field {
+  display: grid;
+  gap: clamp(5px, 1cqh, 7px);
+  min-height: 0;
+}
+
+#gpt-voyager-root .gv-field-tags {
+  position: relative;
+}
+
+#gpt-voyager-root .gv-field-content {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  flex: 1 1 auto;
+  align-content: start;
+  min-height: 0;
+}
+
+#gpt-voyager-root .gv-field span {
+  font-size: 12px;
+  color: var(--gv-text-tertiary);
+}
+
+#gpt-voyager-root .gv-textarea {
+  min-height: 0;
+  height: auto;
+  align-self: stretch;
+  resize: none;
+  line-height: 1.6;
+}
+
+#gpt-voyager-root .gv-tag-suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 9;
+  display: grid;
+  gap: 4px;
+  max-height: 190px;
+  overflow: auto;
+  padding: 8px;
+  border-radius: var(--gv-radius-md);
+  border: 1px solid var(--gv-border-strong);
+  background: rgba(13, 21, 35, 0.98);
+  box-shadow: var(--gv-shadow-md);
+}
+
+#gpt-voyager-root .gv-tag-option {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: rgba(24, 38, 59, 0.9);
+  color: var(--gv-text-primary);
+  text-align: left;
+  cursor: pointer;
+}
+
+#gpt-voyager-root .gv-editor-actions {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--gv-space-8);
+  padding-top: clamp(8px, 1.6cqh, 12px);
+  flex: 0 0 auto;
+  background: linear-gradient(180deg, rgba(8, 13, 24, 0), rgba(8, 13, 24, 0.96) 48%);
+}
+
+@container (max-height: 720px) {
+  #gpt-voyager-root .gv-editor {
+    gap: 10px;
+  }
+
+  #gpt-voyager-root .gv-editor-head h3 {
+    font-size: 15px;
+  }
+
+  #gpt-voyager-root .gv-form {
+    gap: 10px;
+  }
+
+  #gpt-voyager-root .gv-field {
+    gap: 5px;
+  }
+
+  #gpt-voyager-root .gv-field span {
+    font-size: 11px;
+  }
+
+  #gpt-voyager-root .gv-search,
+  #gpt-voyager-root .gv-input,
+  #gpt-voyager-root .gv-textarea {
+    padding: 9px 11px;
+  }
+
+  #gpt-voyager-root .gv-textarea {
+    line-height: 1.52;
+  }
+
+  #gpt-voyager-root .gv-editor-actions {
+    padding-top: 8px;
+  }
+
+  #gpt-voyager-root .gv-editor-actions .gv-btn {
+    min-height: 36px;
+    padding: 0 11px;
+  }
+}
+
+@container (min-height: 860px) {
+  #gpt-voyager-root .gv-editor {
+    gap: 16px;
+  }
+
+  #gpt-voyager-root .gv-form {
+    gap: 14px;
+  }
+
+  #gpt-voyager-root .gv-textarea {
+    line-height: 1.68;
+  }
+}
+
+#gpt-voyager-root .gv-panel-editor-open .gv-toolbar,
+#gpt-voyager-root .gv-panel-editor-open .gv-list-wrap,
+#gpt-voyager-root .gv-panel-editor-open .gv-footer {
+  display: none;
+}
+
+#gpt-voyager-root .gv-list-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  will-change: scroll-position;
+  backface-visibility: hidden;
+}
+
+#gpt-voyager-root .gv-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 11px;
+  width: 100%;
+  min-width: 0;
+  padding-left: 0;
+}
+
+#gpt-voyager-root .gv-list-empty-state {
+  min-height: 100%;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+}
+
+#gpt-voyager-root .gv-card,
+#gpt-voyager-root .gv-empty,
+#gpt-voyager-root .gv-modal-card,
+#gpt-voyager-root .gv-setting-row {
+  border-radius: var(--gv-radius-lg);
+  border: 1px solid var(--gv-border-default);
+  background: linear-gradient(180deg, rgba(23, 36, 56, 0.98), rgba(18, 29, 46, 0.98));
+  box-shadow: var(--gv-shadow-sm);
+}
+
+#gpt-voyager-root .gv-card {
+  position: relative;
+  padding: 12px;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  justify-self: stretch;
+  overflow: visible;
+  content-visibility: auto;
+  contain: layout paint style;
+  contain-intrinsic-size: 168px;
+}
+
+#gpt-voyager-root .gv-card-clickable {
+  cursor: copy;
+}
+
+#gpt-voyager-root .gv-card-clickable:hover,
+#gpt-voyager-root .gv-card-clickable:focus-within {
+  border-color: rgba(78, 215, 162, 0.28);
+  box-shadow: 0 0 0 1px rgba(78, 215, 162, 0.10), var(--gv-shadow-md);
+}
+
+#gpt-voyager-root .gv-card-favorite {
+  border-color: rgba(216, 197, 110, 0.26);
+  box-shadow: 0 0 0 1px rgba(216, 197, 110, 0.08), var(--gv-shadow-sm);
+}
+
+#gpt-voyager-root .gv-card-head {
+  width: 100%;
+  min-width: 0;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 7px;
+}
+
+#gpt-voyager-root .gv-card-top-actions {
+  gap: 3px;
+}
+
+#gpt-voyager-root .gv-card-title-wrap {
+  min-width: 0;
+  display: grid;
+  gap: 0;
+}
+
+#gpt-voyager-root .gv-card-title-line {
+  min-width: 0;
+  display: block;
+  overflow: hidden;
+}
+
+#gpt-voyager-root .gv-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#gpt-voyager-root .gv-card .gv-card-icon-btn {
+  min-width: 28px;
+  height: 28px;
+  border-color: rgba(145, 168, 205, 0.12);
+  background: rgba(20, 31, 49, 0.72);
+  color: rgba(221, 231, 246, 0.78);
+}
+
+#gpt-voyager-root .gv-card-icon-btn-favorite {
+  color: #fff3b4;
+  border-color: rgba(216, 197, 110, 0.22);
+  background: rgba(82, 67, 20, 0.54);
+}
+
+#gpt-voyager-root .gv-card-text {
+  margin: 4px 0 6px;
+  font-size: 13px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+#gpt-voyager-root .gv-card-text-expanded {
+  display: block;
+}
+
+#gpt-voyager-root .gv-card-footer {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin-top: 2px;
+}
+
+#gpt-voyager-root .gv-chip-tag {
+  flex: 0 0 auto;
+  min-height: 20px;
+  padding: 0 7px;
+  font-size: 10px;
+  color: rgba(199, 213, 235, 0.88);
+  background: rgba(29, 43, 65, 0.82);
+}
+
+#gpt-voyager-root .gv-chip-tag.gv-chip-tag-hidden {
+  display: none;
+}
+
+#gpt-voyager-root .gv-card-no-tag {
+  font-size: 12px;
+  color: var(--gv-text-tertiary);
+}
+
+#gpt-voyager-root .gv-card-actions {
+  margin-top: 6px;
+  width: 100%;
+  min-width: 0;
+  gap: 4px;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+#gpt-voyager-root .gv-card-actions > .gv-btn,
+#gpt-voyager-root .gv-card-actions > .gv-inline-btn {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+#gpt-voyager-root .gv-card-actions > .gv-btn,
+#gpt-voyager-root .gv-card-actions > .gv-inline-btn {
+  min-height: 28px;
+  padding: 0 8px;
+  gap: 6px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+#gpt-voyager-root .gv-card-action-btn {
+  letter-spacing: 0.01em;
+}
+
+#gpt-voyager-root .gv-card-action-label {
+  line-height: 1;
+  white-space: nowrap;
+}
+
+#gpt-voyager-root .gv-card-actions .gv-card-action-icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+#gpt-voyager-root .gv-card-actions .gv-card-action-icon .gv-svg-icon {
+  width: 18px;
+  height: 18px;
+}
+
+#gpt-voyager-root .gv-card-actions .gv-card-action-icon-secondary,
+#gpt-voyager-root .gv-card-actions .gv-card-action-icon-secondary .gv-svg-icon {
+  width: 17px;
+  height: 17px;
+}
+
+#gpt-voyager-root .gv-card-actions .gv-card-action-icon-danger,
+#gpt-voyager-root .gv-card-actions .gv-card-action-icon-danger .gv-svg-icon {
+  width: 16px;
+  height: 16px;
+}
+
+#gpt-voyager-root .gv-card-drag-armed {
+  cursor: grabbing;
+  box-shadow: 0 0 0 1px rgba(118, 230, 188, 0.16), var(--gv-shadow-md);
+}
+
+#gpt-voyager-root .gv-card-dragging {
+  opacity: 0.72;
+}
+
+#gpt-voyager-root .gv-card-drop-target {
+  border-color: rgba(118, 230, 188, 0.4);
+  box-shadow: 0 0 0 1px rgba(118, 230, 188, 0.12), var(--gv-shadow-md);
+}
+
+#gpt-voyager-root .gv-card-drop-after {
+  box-shadow:
+    0 0 0 1px rgba(118, 230, 188, 0.12),
+    inset 0 -2px 0 rgba(118, 230, 188, 0.65),
+    var(--gv-shadow-md);
+}
+
+#gpt-voyager-root .gv-empty {
+  width: 100%;
+  padding: 30px 18px;
+  display: grid;
+  gap: 8px;
+  text-align: center;
+  border-style: dashed;
+}
+
+#gpt-voyager-root .gv-empty strong {
+  font-size: 15px;
+  color: var(--gv-text-primary);
+}
+
+#gpt-voyager-root .gv-empty-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  color: #09150f;
+  background: linear-gradient(180deg, var(--gv-accent-300), var(--gv-accent-500));
+  box-shadow:
+    0 14px 28px rgba(49, 197, 141, 0.20),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.18);
+}
+
+#gpt-voyager-root .gv-empty-icon .gv-svg-icon {
+  width: 27px;
+  height: 27px;
+  color: #09150f;
+}
+
+#gpt-voyager-root .gv-empty-action {
+  min-height: 100%;
+  padding: 28px 24px;
+  align-content: center;
+  justify-items: center;
+  gap: 0;
+  border-style: solid;
+  cursor: pointer;
+  text-align: center;
+  background:
+    radial-gradient(circle at top, rgba(77, 220, 171, 0.08), transparent 52%),
+    linear-gradient(180deg, rgba(24, 38, 59, 0.94), rgba(15, 25, 40, 0.98));
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+#gpt-voyager-root .gv-empty-inner {
+  width: min(100%, 320px);
+  margin: auto;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 14px;
+}
+
+#gpt-voyager-root .gv-empty-action strong {
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+#gpt-voyager-root .gv-empty-action span:last-child {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(224, 234, 248, 0.84);
+}
+
+#gpt-voyager-root .gv-empty-action:hover {
+  transform: translateY(-1px);
+  border-color: rgba(116, 231, 189, 0.42);
+  background:
+    radial-gradient(circle at top, rgba(92, 231, 184, 0.14), transparent 54%),
+    linear-gradient(180deg, rgba(26, 42, 65, 0.98), rgba(16, 27, 44, 0.98));
+  box-shadow:
+    0 0 0 1px rgba(87, 223, 174, 0.12),
+    0 18px 38px rgba(4, 9, 18, 0.26);
+}
+
+#gpt-voyager-root .gv-empty-action:active {
+  transform: translateY(0);
+  border-color: rgba(116, 231, 189, 0.5);
+  background:
+    radial-gradient(circle at top, rgba(92, 231, 184, 0.16), transparent 54%),
+    linear-gradient(180deg, rgba(21, 35, 54, 0.98), rgba(13, 22, 37, 0.98));
+  box-shadow:
+    0 0 0 1px rgba(87, 223, 174, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+#gpt-voyager-root .gv-footer {
+  justify-content: flex-end;
+  background: rgba(12, 19, 32, 0.56);
+}
+
+#gpt-voyager-root .gv-footer-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, auto));
+  gap: 8px;
+}
+
+#gpt-voyager-root .gv-footer .gv-btn-footer {
+  min-height: 34px;
+  padding: 0 11px;
+  gap: 6px;
+  border-radius: 12px;
+  font-size: 12px;
+  background: rgba(18, 29, 46, 0.84);
+  box-shadow: none;
+}
+
+#gpt-voyager-root .gv-footer .gv-btn-footer .gv-btn-icon,
+#gpt-voyager-root .gv-footer .gv-btn-footer .gv-svg-icon {
+  width: 14px;
+  height: 14px;
+}
+
+#gpt-voyager-root .gv-footer .gv-btn-footer:hover {
+  background: rgba(24, 38, 59, 0.92);
+}
+
+#gpt-voyager-root .gv-modal {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  overflow: auto;
+  background: rgba(5, 10, 18, 0.68);
+}
+
+#gpt-voyager-root [data-role="settings-modal"] {
+  z-index: 12;
+}
+
+#gpt-voyager-root [data-role="import-modal"] {
+  z-index: 16;
+}
+
+#gpt-voyager-root .gv-modal-card {
+  width: min(100%, 360px);
+  padding: 18px;
+}
+
+#gpt-voyager-root .gv-modal-card-settings {
+  width: min(100%, 460px);
+  max-height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 16px 16px 14px;
+}
+
+#gpt-voyager-root .gv-modal-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+#gpt-voyager-root .gv-modal-card p {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--gv-text-secondary);
+}
+
+#gpt-voyager-root .gv-modal-actions-stack {
+  width: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  margin-top: 16px;
+}
+
+#gpt-voyager-root .gv-modal-actions-stack .gv-btn {
+  width: 100%;
+}
+
+#gpt-voyager-root .gv-settings-list {
+  display: grid;
+  gap: 12px;
+  min-height: 0;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+#gpt-voyager-root .gv-settings-group {
+  display: grid;
+  gap: 8px;
+}
+
+#gpt-voyager-root .gv-settings-group-head {
+  display: grid;
+  gap: 3px;
+  padding: 0 2px;
+}
+
+#gpt-voyager-root .gv-settings-group-head strong {
+  font-size: 13px;
+  color: var(--gv-text-primary);
+}
+
+#gpt-voyager-root .gv-settings-group-head span {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--gv-text-tertiary);
+}
+
+#gpt-voyager-root .gv-setting-row {
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border-color: var(--gv-border-subtle);
+  background: rgba(18, 29, 46, 0.54);
+  box-shadow: none;
+}
+
+#gpt-voyager-root .gv-setting-row-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+#gpt-voyager-root .gv-setting-actions {
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 0;
+}
+
+#gpt-voyager-root .gv-setting-copy {
+  display: grid;
+  gap: 6px;
+}
+
+#gpt-voyager-root .gv-setting-copy strong {
+  font-size: 14px;
+  color: var(--gv-text-primary);
+}
+
+#gpt-voyager-root .gv-setting-row-compact {
+  justify-content: flex-start;
+}
+
+#gpt-voyager-root .gv-setting-row-compact .gv-setting-actions {
+  width: 100%;
+}
+
+#gpt-voyager-root .gv-modal-card-settings .gv-btn,
+#gpt-voyager-root .gv-modal-card-settings .gv-file {
+  min-height: 34px;
+  padding: 0 12px;
+  gap: 6px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+#gpt-voyager-root .gv-modal-card-settings .gv-btn-icon,
+#gpt-voyager-root .gv-modal-card-settings .gv-svg-icon {
+  width: 14px;
+  height: 14px;
+}
+
+#gpt-voyager-root .gv-modal-card-settings .gv-modal-head {
+  align-items: flex-start;
+  min-height: 32px;
+  margin-bottom: 10px;
+  padding-right: 40px;
+}
+
+#gpt-voyager-root .gv-modal-card-settings .gv-modal-head .gv-icon-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  min-width: 32px;
+  height: 32px;
+}
+
+#gpt-voyager-root .gv-modal-card-settings .gv-modal-head p {
+  margin-top: 4px;
+}
+
+#gpt-voyager-root .gv-switch {
+  position: relative;
+  min-width: 54px;
+  width: 54px;
+  height: 30px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(34, 49, 73, 0.96);
+  box-shadow: inset 0 0 0 1px rgba(145, 168, 205, 0.14);
+  color: transparent;
+  font-size: 0;
+  cursor: pointer;
+}
+
+#gpt-voyager-root .gv-switch::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(236, 244, 255, 0.96);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.22);
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease;
+}
+
+#gpt-voyager-root .gv-switch.gv-switch-active {
+  background: linear-gradient(180deg, rgba(95, 228, 176, 0.94), rgba(49, 197, 141, 0.9));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 10px 22px rgba(49, 197, 141, 0.18);
+}
+
+#gpt-voyager-root .gv-switch.gv-switch-active::after {
+  transform: translateX(24px);
+}
+
+#gpt-voyager-root .gv-file-input {
+  display: none;
+}
+
+#gpt-voyager-root .gv-fab {
+  width: 58px;
+  height: 58px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--gv-accent-400), var(--gv-accent-600));
+  color: rgba(248, 255, 252, 0.98);
+  display: grid;
+  place-items: center;
+  line-height: 0;
+  cursor: grab;
+  box-shadow:
+    0 0 0 1px rgba(78, 215, 162, 0.10),
+    0 16px 30px rgba(0, 0, 0, 0.28);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    filter 0.18s ease;
+}
+
+#gpt-voyager-root .gv-fab:hover {
+  transform: translateY(-2px) scale(1.02);
+  border-color: rgba(118, 230, 188, 0.34);
+  background: linear-gradient(180deg, var(--gv-accent-400), var(--gv-accent-600));
+  box-shadow:
+    0 0 0 1px rgba(118, 230, 188, 0.16),
+    0 0 24px rgba(74, 219, 166, 0.16),
+    0 18px 34px rgba(0, 0, 0, 0.30),
+    0 14px 34px rgba(44, 178, 129, 0.26);
+  filter: saturate(1.02) brightness(1.01);
+}
+
+#gpt-voyager-root .gv-fab:active {
+  cursor: grabbing;
+  transform: translateY(0) scale(0.99);
+}
+
+#gpt-voyager-root .gv-fab-active {
+  opacity: 0.96;
+}
+
+#gpt-voyager-root .gv-panel::-webkit-resizer {
+  background:
+    linear-gradient(135deg, transparent 0 50%, rgba(145, 168, 205, 0.16) 50% 60%, transparent 60% 100%),
+    linear-gradient(135deg, transparent 0 68%, rgba(78, 215, 162, 0.26) 68% 78%, transparent 78% 100%);
+}
+
+@media (max-width: 900px) {
+  #gpt-voyager-root .gv-panel {
+    min-width: 280px;
+    max-width: calc(100vw - 12px);
+  }
+
+  #gpt-voyager-root .gv-card-footer,
+  #gpt-voyager-root .gv-setting-row,
+  #gpt-voyager-root .gv-setting-row-actions {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #gpt-voyager-root .gv-footer {
+    justify-content: flex-end;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  #gpt-voyager-root .gv-quick-panel {
+    width: min(332px, calc(100vw - 28px));
+  }
+
+}
+
+@media (max-width: 640px) {
+  #gpt-voyager-root .gv-header,
+  #gpt-voyager-root .gv-toolbar,
+  #gpt-voyager-root .gv-editor,
+  #gpt-voyager-root .gv-list-wrap,
+  #gpt-voyager-root .gv-footer {
+    padding: 10px 12px;
+  }
+
+  #gpt-voyager-root .gv-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  #gpt-voyager-root .gv-header-main {
+    grid-column: 1 / 2;
+  }
+
+  #gpt-voyager-root .gv-header-actions {
+    justify-self: end;
+  }
+
+  #gpt-voyager-root .gv-header-new {
+    grid-column: 1 / 3;
+    width: 100%;
+  }
+
+  #gpt-voyager-root .gv-search {
+    padding-right: 80px;
+  }
+
+  #gpt-voyager-root .gv-chip-filter {
+    min-width: 64px;
+    padding: 0 8px;
+    font-size: 10px;
+  }
+
+  #gpt-voyager-root .gv-setting-actions,
+  #gpt-voyager-root .gv-card-actions,
+  #gpt-voyager-root .gv-quick-action-stack,
+  #gpt-voyager-root .gv-display-mode-group {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  #gpt-voyager-root .gv-quick-setting-row {
+    grid-template-columns: 1fr;
+  }
+
+  #gpt-voyager-root .gv-modal {
+    padding: 14px;
+  }
+}

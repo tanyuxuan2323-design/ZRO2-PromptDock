@@ -1,0 +1,306 @@
+:root {
+  color-scheme: dark;
+  --bg-page: #0b1220;
+  --bg-panel: rgba(15, 24, 39, 0.98);
+  --bg-surface: rgba(20, 32, 51, 0.92);
+  --bg-elevated: rgba(27, 42, 66, 0.98);
+  --border-subtle: rgba(145, 168, 205, 0.10);
+  --border-default: rgba(145, 168, 205, 0.16);
+  --border-strong: rgba(145, 168, 205, 0.24);
+  --text-primary: #eef4ff;
+  --text-secondary: #c7d5eb;
+  --text-tertiary: #91a5c3;
+  --text-muted: #6e829f;
+  --accent-300: #76e6bc;
+  --accent-400: #4ed7a2;
+  --accent-500: #31c58d;
+  --accent-600: #23a874;
+  --danger: #d66f7b;
+  --shadow-lg: 0 30px 60px rgba(0, 0, 0, 0.32);
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  width: 392px;
+  background:
+    radial-gradient(circle at top right, rgba(71, 215, 161, 0.08), transparent 26%),
+    linear-gradient(180deg, rgba(17, 27, 43, 0.98), rgba(12, 20, 33, 0.98));
+  color: var(--text-primary);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.app {
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.topbar,
+.panel-section {
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  background: rgba(18, 29, 46, 0.76);
+  box-shadow: var(--shadow-lg);
+}
+
+.topbar {
+  padding: 20px 18px 18px;
+  background:
+    radial-gradient(circle at top, rgba(78, 215, 162, 0.1), transparent 58%),
+    linear-gradient(180deg, rgba(18, 29, 46, 0.88), rgba(14, 24, 39, 0.84));
+}
+
+.brand {
+  min-width: 0;
+}
+
+.brand-showcase {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.brand-logo-shell {
+  width: 68px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.2), transparent 38%),
+    linear-gradient(180deg, rgba(26, 41, 63, 0.98), rgba(17, 28, 44, 0.98));
+  border: 1px solid rgba(145, 168, 205, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 16px 30px rgba(0, 0, 0, 0.22);
+}
+
+.brand-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+.brand-showcase h1 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+}
+
+.topbar-autosave {
+  margin-top: 14px;
+  padding-top: 12px;
+  display: grid;
+  gap: 10px;
+  border-top: 1px solid rgba(145, 168, 205, 0.12);
+}
+
+.panel-section {
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-head strong,
+.setting-copy strong {
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.status-message {
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--text-tertiary);
+}
+
+.setting-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  min-height: 40px;
+}
+
+.setting-row-compact {
+  min-height: 30px;
+}
+
+.setting-copy {
+  display: grid;
+  gap: 3px;
+}
+
+.autosave-controls,
+.mode-group,
+.action-stack {
+  display: grid;
+  gap: 8px;
+}
+
+button,
+.file-button,
+.mode-button {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  background: rgba(24, 38, 59, 0.92);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+button:hover,
+.file-button:hover,
+.mode-button:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
+  background: var(--bg-elevated);
+}
+
+button.primary,
+.chip.active,
+.switch.active,
+.mode-button.active {
+  color: #081b12;
+  border-color: transparent;
+  background: linear-gradient(180deg, var(--accent-400), var(--accent-500));
+  box-shadow: 0 10px 22px rgba(49, 197, 141, 0.18);
+  font-weight: 700;
+}
+
+.switch {
+  position: relative;
+  width: 54px;
+  min-width: 54px;
+  height: 30px;
+  min-height: 30px;
+  padding: 0;
+  border-radius: 999px;
+  background: rgba(34, 49, 73, 0.96);
+  box-shadow: inset 0 0 0 1px rgba(145, 168, 205, 0.14);
+  color: transparent;
+  font-size: 0;
+}
+
+.switch::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(236, 244, 255, 0.96);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.22);
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease;
+}
+
+.switch.active {
+  background: linear-gradient(180deg, rgba(95, 228, 176, 0.94), rgba(49, 197, 141, 0.9));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 10px 22px rgba(49, 197, 141, 0.18);
+}
+
+.switch.active::after {
+  transform: translateX(24px);
+}
+
+.mode-button {
+  min-height: 42px;
+  justify-content: flex-start;
+  padding: 0 14px;
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at top, rgba(77, 220, 171, 0.06), transparent 58%),
+    rgba(22, 34, 54, 0.92);
+}
+
+.mode-button strong {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.action,
+.folder-button {
+  width: 100%;
+  font-size: 12px;
+}
+
+.folder-button {
+  justify-content: center;
+}
+
+.autosave-folder-hint {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--text-tertiary);
+  text-align: center;
+  word-break: break-all;
+}
+
+.file-button {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  justify-content: center;
+}
+
+.file-button input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+button:focus-visible,
+.mode-button:focus-visible,
+.file-button:focus-visible {
+  outline: none;
+  border-color: rgba(78, 215, 162, 0.74);
+  box-shadow: 0 0 0 3px rgba(78, 215, 162, 0.14);
+}
+
+.status-message {
+  margin: 0;
+  padding: 0 2px 2px;
+}
+
+.hidden {
+  display: none !important;
+}

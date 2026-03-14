@@ -1,0 +1,324 @@
+const STORAGE_KEY = "gpt_prompt_library_items";
+const PREFS_KEY = "gpt_prompt_library_ui_prefs";
+const DISPLAY_MODE_CHATGPT = "chatgpt_only";
+const DISPLAY_MODE_ALL = "all_sites";
+
+const state = {
+  items: [],
+  prefs: {
+    settings: {
+      managerVisible: true,
+    },
+    displayMode: DISPLAY_MODE_CHATGPT,
+    autoSave: {
+      enabled: false,
+      directoryName: "",
+      lastSavedAt: 0,
+      lastSavedItemCount: 0,
+      lastSavedNewestCreatedAt: 0,
+      sequence: 0,
+    },
+  },
+};
+
+const elements = {
+  autoHideToggle: document.querySelector("#autoHideToggle"),
+  autoSaveToggle: document.querySelector("#autoSaveToggle"),
+  autoSaveControls: document.querySelector("#autoSaveControls"),
+  chooseAutoSaveFolder: document.querySelector("#chooseAutoSaveFolder"),
+  autoSaveFolderHint: document.querySelector("#autoSaveFolderHint"),
+  displayModeChatgpt: document.querySelector("#displayModeChatgpt"),
+  displayModeAll: document.querySelector("#displayModeAll"),
+  importInput: document.querySelector("#importInput"),
+  statusMessage: document.querySelector("#statusMessage"),
+};
+
+let statusTimer = null;
+
+init().catch((error) => {
+  console.error("PromptDock popup init failed", error);
+  showStatus("面板初始化失败，请重新打开扩展。");
+});
+
+async function init() {
+  bindEvents();
+  await loadState();
+  render();
+}
+
+function bindEvents() {
+  elements.autoHideToggle.addEventListener("click", async () => {
+    state.prefs.settings.managerVisible = !state.prefs.settings.managerVisible;
+    await persistPrefs();
+    render();
+    showStatus(state.prefs.settings.managerVisible ? "已显示提示词管理器入口。" : "已隐藏提示词管理器入口。");
+  });
+
+  elements.autoSaveToggle.addEventListener("click", async () => {
+    if (state.prefs.autoSave.enabled) {
+      state.prefs.autoSave.enabled = false;
+      await persistPrefs();
+      render();
+      showStatus("已关闭自动保存。");
+      return;
+    }
+
+    const selected = await ensureAutoSaveDirectory();
+    if (!selected) return;
+
+    state.prefs.autoSave.enabled = true;
+    await persistPrefs();
+    render();
+    showStatus("已开启自动保存。");
+  });
+
+  elements.chooseAutoSaveFolder.addEventListener("click", async () => {
+    const selected = await ensureAutoSaveDirectory(true);
+    if (!selected) return;
+
+    await persistPrefs();
+    render();
+    showStatus("自动保存文件夹已更新。");
+  });
+
+  [elements.displayModeChatgpt, elements.displayModeAll].forEach((button) => {
+    button.addEventListener("click", async () => {
+      const { mode } = button.dataset;
+      if (!mode || state.prefs.displayMode === mode) return;
+      state.prefs.displayMode = normalizeDisplayMode(mode);
+      await persistPrefs();
+      render();
+      showStatus(
+        state.prefs.displayMode === DISPLAY_MODE_ALL
+          ? "已切换为全浏览器显示。"
+          : "已切换为仅在 ChatGPT 显示。",
+      );
+    });
+  });
+
+  elements.importInput.addEventListener("change", async (event) => {
+    await importItems(event);
+  });
+}
+
+async function loadState() {
+  const result = await chrome.storage.local.get([STORAGE_KEY, PREFS_KEY]);
+  state.items = Array.isArray(result[STORAGE_KEY]) ? result[STORAGE_KEY].map(normalizeItem).filter(Boolean) : [];
+  state.prefs = normalizePrefs(result[PREFS_KEY]);
+}
+
+function render() {
+  renderSwitch(elements.autoHideToggle, state.prefs.settings.managerVisible);
+  renderSwitch(elements.autoSaveToggle, state.prefs.autoSave.enabled);
+  elements.autoSaveControls.classList.toggle("hidden", !state.prefs.autoSave.enabled);
+  elements.autoSaveFolderHint.textContent = state.prefs.autoSave.directoryName
+    ? `当前文件夹：${state.prefs.autoSave.directoryName}`
+    : "还没有选择文件夹";
+  elements.chooseAutoSaveFolder.textContent = state.prefs.autoSave.directoryName
+    ? "更换保存文件夹"
+    : "选择保存文件夹";
+  renderDisplayModeButtons();
+}
+
+function renderSwitch(element, isActive) {
+  element.textContent = isActive ? "开启" : "关闭";
+  element.classList.toggle("active", isActive);
+  element.setAttribute("aria-pressed", String(isActive));
+  element.setAttribute("aria-checked", String(isActive));
+  element.setAttribute("role", "switch");
+}
+
+function renderDisplayModeButtons() {
+  const activeMode = state.prefs.displayMode;
+  [elements.displayModeChatgpt, elements.displayModeAll].forEach((button) => {
+    const isActive = button.dataset.mode === activeMode;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-checked", String(isActive));
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+}
+
+async function persistPrefs() {
+  await chrome.storage.local.set({ [PREFS_KEY]: state.prefs });
+  await syncAutoSaveRuntime();
+}
+
+async function importItems(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  try {
+    const text = await file.text();
+    const imported = JSON.parse(text);
+    const importedItems = Array.isArray(imported)
+      ? imported
+      : Array.isArray(imported?.items)
+        ? imported.items
+        : null;
+
+    if (!Array.isArray(importedItems)) {
+      throw new Error("Imported file is not an array");
+    }
+
+    const normalized = importedItems.map(normalizeItem).filter(Boolean);
+    if (!normalized.length) {
+      throw new Error("Imported file contains no valid prompts");
+    }
+
+    state.items = mergeItems(state.items, normalized);
+    await chrome.storage.local.set({ [STORAGE_KEY]: state.items });
+    showStatus(`已导入 ${normalized.length} 条提示。`);
+  } catch (error) {
+    console.error("Popup import failed", error);
+    showStatus("导入失败，请确认 JSON 格式正确。");
+  } finally {
+    event.target.value = "";
+  }
+}
+
+function mergeItems(existingItems, importedItems) {
+  const seen = new Map();
+  [...importedItems, ...existingItems].forEach((item) => {
+    const key = `${item.title}::${item.content}`;
+    const previous = seen.get(key);
+    if (!previous || previous.updatedAt < item.updatedAt) {
+      seen.set(key, item);
+    }
+  });
+  return [...seen.values()];
+}
+
+function normalizePrefs(value) {
+  return {
+    ...value,
+    settings: {
+      managerVisible:
+        value?.settings?.managerVisible ??
+        value?.settings?.autoHideOnOutside ??
+        true,
+    },
+    displayMode: normalizeDisplayMode(value?.displayMode),
+    autoSave: {
+      enabled: Boolean(value?.autoSave?.enabled),
+      directoryName: typeof value?.autoSave?.directoryName === "string" ? value.autoSave.directoryName : "",
+      lastSavedAt: Number(value?.autoSave?.lastSavedAt) || 0,
+      lastSavedItemCount: Number(value?.autoSave?.lastSavedItemCount) || 0,
+      lastSavedNewestCreatedAt: Number(value?.autoSave?.lastSavedNewestCreatedAt) || 0,
+      sequence: Number(value?.autoSave?.sequence) || 0,
+    },
+  };
+}
+
+function normalizeDisplayMode(value) {
+  return value === DISPLAY_MODE_ALL ? DISPLAY_MODE_ALL : DISPLAY_MODE_CHATGPT;
+}
+
+function normalizeItem(item) {
+  if (!item || typeof item.title !== "string" || typeof item.content !== "string") {
+    return null;
+  }
+
+  const now = Date.now();
+  return {
+    id: typeof item.id === "string" && item.id ? item.id : crypto.randomUUID(),
+    title: item.title.trim(),
+    content: item.content.trim(),
+    tags: Array.isArray(item.tags) ? item.tags : [],
+    favorite: Boolean(item.favorite),
+    order: Number.isFinite(Number(item.order)) ? Number(item.order) : 0,
+    createdAt: Number(item.createdAt) || now,
+    updatedAt: Number(item.updatedAt) || now,
+    lastUsedAt: Number(item.lastUsedAt) || 0,
+  };
+}
+
+function showStatus(message) {
+  elements.statusMessage.textContent = message;
+  elements.statusMessage.classList.remove("hidden");
+  if (statusTimer) clearTimeout(statusTimer);
+  statusTimer = window.setTimeout(() => {
+    elements.statusMessage.classList.add("hidden");
+    elements.statusMessage.textContent = "";
+  }, 2400);
+}
+
+async function ensureAutoSaveDirectory(forcePick = false) {
+  if (typeof window.showDirectoryPicker !== "function") {
+    showStatus("当前浏览器环境不支持选择自动保存文件夹。");
+    return false;
+  }
+
+  try {
+    let directoryHandle = null;
+    if (!forcePick) {
+      directoryHandle = await loadDirectoryHandle();
+    }
+
+    if (!directoryHandle) {
+      directoryHandle = await window.showDirectoryPicker({ mode: "readwrite" });
+    }
+
+    if (!directoryHandle) return false;
+
+    const permission = await directoryHandle.requestPermission({ mode: "readwrite" });
+    if (permission !== "granted") {
+      showStatus("没有获得文件夹写入权限。");
+      return false;
+    }
+
+    await saveDirectoryHandle(directoryHandle);
+    state.prefs.autoSave.directoryName = directoryHandle.name || "";
+    return true;
+  } catch (error) {
+    if (error?.name !== "AbortError") {
+      console.error("Choose auto save folder failed", error);
+      showStatus("选择自动保存文件夹失败。");
+    }
+    return false;
+  }
+}
+
+async function syncAutoSaveRuntime() {
+  try {
+    await chrome.runtime.sendMessage({ type: "autosave-config-updated" });
+  } catch (error) {
+    console.warn("Auto save runtime sync skipped", error);
+  }
+}
+
+function openAutoSaveDb() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("zro2-promptdock-autosave", 1);
+    request.onupgradeneeded = () => {
+      const database = request.result;
+      if (!database.objectStoreNames.contains("handles")) {
+        database.createObjectStore("handles");
+      }
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function saveDirectoryHandle(handle) {
+  const database = await openAutoSaveDb();
+  await new Promise((resolve, reject) => {
+    const transaction = database.transaction("handles", "readwrite");
+    transaction.objectStore("handles").put(handle, "autosave-directory");
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error);
+  });
+  database.close();
+}
+
+async function loadDirectoryHandle() {
+  const database = await openAutoSaveDb();
+  const handle = await new Promise((resolve, reject) => {
+    const transaction = database.transaction("handles", "readonly");
+    const request = transaction.objectStore("handles").get("autosave-directory");
+    request.onsuccess = () => resolve(request.result || null);
+    request.onerror = () => reject(request.error);
+  });
+  database.close();
+  return handle;
+}
