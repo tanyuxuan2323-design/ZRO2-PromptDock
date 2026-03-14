@@ -2,7 +2,7 @@
   "latestVersion": "2.1.1",
   "releaseNotes": "主线升级到 2.1.1，并继续保留 GitHub 更新检查能力。",
   "downloadUrl": "https://github.com/tanyuxuan2323-design/ZRO2-PromptDock/releases/download/v2.1.1/ZRO2%20PromptDock_v2_1_1.zip",
-  "releasePage": "https://github.com/tanyuxuan2323-design/ZRO2-PromptDock/releases",
+  "releasePage": "https://github.com/tanyuxuan2323-design/ZRO2-PromptDock",
   "forceUpdate": false,
   "publishedAt": "2026-03-14T22:04:42+08:00"
 }
