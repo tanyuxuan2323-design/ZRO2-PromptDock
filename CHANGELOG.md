@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, adapted for this repository.
 
+## [2.1.2] - 2026-03-14
+
+### Changed
+
+- Updated extension manifest to `2.1.2`
+- Updated remote release metadata for the `v2.1.2` test package
+- Kept runtime functionality unchanged in this release
+
 ## [2.1.1] - 2026-03-14
 
 ### Changed
