@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, adapted for this repository.
 
+## [2.0.9] - 2026-03-14
+
+### Changed
+
+- Synced mainline package updates into the GitHub source branch
+- Updated extension manifest to `v2.0.9`
+- Added extension `key` to keep a stable extension identity across builds
+- Refreshed `content.js` with the latest mainline implementation
+
+### Notes
+
+- Public repository documentation layout was retained while merging the new package source
+
 ## [2.0.8] - 2026-03-14
 
 ### Added
