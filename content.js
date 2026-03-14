@@ -2,7 +2,7 @@
   if (window.__gptVoyagerPromptLibraryMounted) return;
   window.__gptVoyagerPromptLibraryMounted = true;
 
-  const EXTENSION_VERSION = "2.0.10";
+  const EXTENSION_VERSION = "2.1.0";
   const STORAGE_KEY = "gpt_prompt_library_items";
   const PREFS_KEY = "gpt_prompt_library_ui_prefs";
   const ROOT_ID = "gpt-voyager-root";

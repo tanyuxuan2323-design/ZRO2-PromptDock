@@ -1,8 +1,8 @@
 {
-  "latestVersion": "2.0.10",
-  "releaseNotes": "Mainline update with built-in GitHub update check support.",
-  "downloadUrl": "https://github.com/tanyuxuan2323-design/ZRO2-PromptDock/releases/download/v2.0.10/ZRO2%20PromptDock_v2_0_10_mainline_updatecheck.zip",
-  "releasePage": "https://github.com/tanyuxuan2323-design/ZRO2-PromptDock/releases/tag/v2.0.10",
+  "latestVersion": "2.1.0",
+  "releaseNotes": "Mainline upgrade to 2.1.0 with GitHub update check support retained.",
+  "downloadUrl": "https://github.com/tanyuxuan2323-design/ZRO2-PromptDock/releases/download/v2.1.0/ZRO2%20PromptDock_v2_1_0.zip",
+  "releasePage": "https://github.com/tanyuxuan2323-design/ZRO2-PromptDock/releases/tag/v2.1.0",
   "forceUpdate": false,
   "publishedAt": "2026-03-14T22:04:42+08:00"
 }

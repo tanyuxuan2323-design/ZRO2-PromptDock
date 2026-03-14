@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, adapted for this repository.
 
+## [2.1.0] - 2026-03-14
+
+### Changed
+
+- Updated extension manifest to `v2.1.0`
+- Synced the latest `content.js` from the `v2.1.0` mainline package
+- Updated remote release metadata in `version.json`
+
+### Notes
+
+- GitHub-based update check support remains enabled in this release
+
 ## [2.0.10] - 2026-03-14
 
 ### Added
