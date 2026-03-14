@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, adapted for this repository.
 
+## [2.1.5] - 2026-03-15
+
+### Changed
+
+- Updated extension manifest to `2.1.5`
+- Synced packaged `content.js` and `popup.html` into the repository
+- Updated remote release metadata for the `v2.1.5` package
+- Kept the GitHub update-page behavior pointing at the repository homepage
+
 ## [2.1.4] - 2026-03-15
 
 ### Changed
