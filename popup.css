@@ -155,9 +155,35 @@ input {
 
 .autosave-controls,
 .mode-group,
-.action-stack {
+.action-stack,
+.update-block,
+.update-actions {
   display: grid;
   gap: 8px;
+}
+
+.update-version,
+.update-notes,
+.update-summary {
+  margin: 0;
+}
+
+.update-version {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-tertiary);
+}
+
+.update-summary {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.update-notes {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
 }
 
 button,

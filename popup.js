@@ -1,7 +1,9 @@
 const STORAGE_KEY = "gpt_prompt_library_items";
 const PREFS_KEY = "gpt_prompt_library_ui_prefs";
+const UPDATE_STATE_KEY = "gpt_prompt_library_update_state";
 const DISPLAY_MODE_CHATGPT = "chatgpt_only";
 const DISPLAY_MODE_ALL = "all_sites";
+const CURRENT_VERSION = chrome.runtime.getManifest().version;
 
 const state = {
   items: [],
@@ -19,6 +21,16 @@ const state = {
       sequence: 0,
     },
   },
+  update: {
+    configured: false,
+    hasUpdate: false,
+    latestVersion: "",
+    releaseNotes: "",
+    downloadUrl: "",
+    releasePage: "",
+    lastCheckedAt: 0,
+    error: "",
+  },
 };
 
 const elements = {
@@ -29,6 +41,11 @@ const elements = {
   autoSaveFolderHint: document.querySelector("#autoSaveFolderHint"),
   displayModeChatgpt: document.querySelector("#displayModeChatgpt"),
   displayModeAll: document.querySelector("#displayModeAll"),
+  currentVersion: document.querySelector("#currentVersion"),
+  updateSummary: document.querySelector("#updateSummary"),
+  updateNotes: document.querySelector("#updateNotes"),
+  checkUpdateButton: document.querySelector("#checkUpdateButton"),
+  openUpdateButton: document.querySelector("#openUpdateButton"),
   importInput: document.querySelector("#importInput"),
   statusMessage: document.querySelector("#statusMessage"),
 };
@@ -96,15 +113,30 @@ function bindEvents() {
     });
   });
 
+  elements.checkUpdateButton.addEventListener("click", async () => {
+    await checkForUpdates(true);
+  });
+
+  elements.openUpdateButton.addEventListener("click", async () => {
+    const targetUrl = state.update.downloadUrl || state.update.releasePage;
+    if (!targetUrl) {
+      showStatus("当前还没有可打开的更新地址。");
+      return;
+    }
+
+    await chrome.tabs.create({ url: targetUrl });
+  });
+
   elements.importInput.addEventListener("change", async (event) => {
     await importItems(event);
   });
 }
 
 async function loadState() {
-  const result = await chrome.storage.local.get([STORAGE_KEY, PREFS_KEY]);
+  const result = await chrome.storage.local.get([STORAGE_KEY, PREFS_KEY, UPDATE_STATE_KEY]);
   state.items = Array.isArray(result[STORAGE_KEY]) ? result[STORAGE_KEY].map(normalizeItem).filter(Boolean) : [];
   state.prefs = normalizePrefs(result[PREFS_KEY]);
+  state.update = normalizeUpdateState(result[UPDATE_STATE_KEY]);
 }
 
 function render() {
@@ -118,6 +150,7 @@ function render() {
     ? "更换保存文件夹"
     : "选择保存文件夹";
   renderDisplayModeButtons();
+  renderUpdateSection();
 }
 
 function renderSwitch(element, isActive) {
@@ -138,9 +171,75 @@ function renderDisplayModeButtons() {
   });
 }
 
+function renderUpdateSection() {
+  elements.currentVersion.textContent = `当前版本 v${CURRENT_VERSION}`;
+
+  if (!state.update.configured) {
+    elements.updateSummary.textContent = "还没有配置 GitHub 更新地址。";
+    elements.updateNotes.textContent = "先把远程 version.json 链接填进 background.js 里的 UPDATE_MANIFEST_URL。";
+    elements.openUpdateButton.classList.add("hidden");
+    return;
+  }
+
+  if (state.update.error) {
+    elements.updateSummary.textContent = "更新检查失败";
+    elements.updateNotes.textContent = state.update.error;
+    elements.openUpdateButton.classList.toggle("hidden", !state.update.releasePage);
+    return;
+  }
+
+  if (state.update.hasUpdate) {
+    elements.updateSummary.textContent = `发现新版本 v${state.update.latestVersion}`;
+    elements.updateNotes.textContent = state.update.releaseNotes || "已有新版本可下载。";
+    elements.openUpdateButton.classList.remove("hidden");
+    return;
+  }
+
+  if (state.update.lastCheckedAt) {
+    elements.updateSummary.textContent = "当前已是最新版本";
+    elements.updateNotes.textContent = `上次检查：${formatTimestamp(state.update.lastCheckedAt)}`;
+  } else {
+    elements.updateSummary.textContent = "还没有检查更新";
+    elements.updateNotes.textContent = "点击下方按钮，从 GitHub 检查是否有新版本。";
+  }
+
+  elements.openUpdateButton.classList.toggle("hidden", !state.update.releasePage && !state.update.downloadUrl);
+}
+
 async function persistPrefs() {
   await chrome.storage.local.set({ [PREFS_KEY]: state.prefs });
   await syncAutoSaveRuntime();
+}
+
+async function checkForUpdates(manual = false) {
+  elements.checkUpdateButton.disabled = true;
+  const previousLabel = elements.checkUpdateButton.textContent;
+  elements.checkUpdateButton.textContent = "检查中...";
+
+  try {
+    const response = await chrome.runtime.sendMessage({ type: "check-for-updates", manual });
+    state.update = normalizeUpdateState(response);
+    await chrome.storage.local.set({ [UPDATE_STATE_KEY]: state.update });
+    render();
+
+    if (!state.update.configured) {
+      showStatus("更新地址还没有配置。");
+      return;
+    }
+
+    if (state.update.error) {
+      showStatus("更新检查失败。");
+      return;
+    }
+
+    showStatus(state.update.hasUpdate ? `发现新版本 v${state.update.latestVersion}` : "当前已是最新版本。");
+  } catch (error) {
+    console.error("Manual update check failed", error);
+    showStatus("检查更新失败。");
+  } finally {
+    elements.checkUpdateButton.disabled = false;
+    elements.checkUpdateButton.textContent = previousLabel;
+  }
 }
 
 async function importItems(event) {
@@ -209,6 +308,19 @@ function normalizePrefs(value) {
   };
 }
 
+function normalizeUpdateState(value) {
+  return {
+    configured: Boolean(value?.configured),
+    hasUpdate: Boolean(value?.hasUpdate),
+    latestVersion: typeof value?.latestVersion === "string" ? value.latestVersion : "",
+    releaseNotes: typeof value?.releaseNotes === "string" ? value.releaseNotes : "",
+    downloadUrl: typeof value?.downloadUrl === "string" ? value.downloadUrl : "",
+    releasePage: typeof value?.releasePage === "string" ? value.releasePage : "",
+    lastCheckedAt: Number(value?.lastCheckedAt) || 0,
+    error: typeof value?.error === "string" ? value.error : "",
+  };
+}
+
 function normalizeDisplayMode(value) {
   return value === DISPLAY_MODE_ALL ? DISPLAY_MODE_ALL : DISPLAY_MODE_CHATGPT;
 }
@@ -230,6 +342,19 @@ function normalizeItem(item) {
     updatedAt: Number(item.updatedAt) || now,
     lastUsedAt: Number(item.lastUsedAt) || 0,
   };
+}
+
+function formatTimestamp(timestamp) {
+  try {
+    return new Intl.DateTimeFormat("zh-CN", {
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(timestamp);
+  } catch {
+    return "";
+  }
 }
 
 function showStatus(message) {

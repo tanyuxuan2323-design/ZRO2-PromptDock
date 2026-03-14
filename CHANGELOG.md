@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, adapted for this repository.
 
+## [2.0.10] - 2026-03-14
+
+### Added
+
+- Built-in update check flow backed by remote `version.json`
+- Background alarm-based automatic update polling
+- Popup-side update status and release lookup support
+- Repository-tracked `version.json` for release metadata
+
+### Changed
+
+- Updated extension manifest to `v2.0.10`
+- Synced popup and background logic from the `mainline_updatecheck` package
+- Refreshed content script alongside the update-check release
+
+### Notes
+
+- Public repository README layout was kept while merging the new package source
+
 ## [2.0.9] - 2026-03-14
 
 ### Changed

@@ -28,6 +28,7 @@
   <img src="https://img.shields.io/badge/Manifest-V3-f59e0b?style=flat-square" alt="Manifest V3">
   <img src="https://img.shields.io/badge/ChatGPT-chatgpt.com-10a37f?style=flat-square" alt="ChatGPT">
   <img src="https://img.shields.io/badge/Status-Active-238636?style=flat-square" alt="Status">
+  <img src="https://img.shields.io/badge/Update%20Check-Built--in-7c3aed?style=flat-square" alt="Update Check">
 </p>
 
 ---
@@ -106,7 +107,7 @@
 
 ## 当前版本
 
-- 当前版本：`v2.0.9`
+- 当前版本：`v2.0.10`
 - 扩展清单版本：`Manifest V3`
 - 主要平台：`Chrome / Edge`
 - 项目状态：`Active`
