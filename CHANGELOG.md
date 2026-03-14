@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, adapted for this repository.
 
+## [2.1.1] - 2026-03-14
+
+### Changed
+
+- Bumped extension version to `2.1.1`
+- Kept the built-in GitHub update check workflow
+- Updated remote release metadata and package links for the `v2.1.1` release
+
 ## [2.1.0] - 2026-03-14
 
 ### Changed
