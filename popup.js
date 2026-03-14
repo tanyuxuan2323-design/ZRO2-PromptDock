@@ -118,7 +118,7 @@ function bindEvents() {
   });
 
   elements.openUpdateButton.addEventListener("click", async () => {
-    const targetUrl = state.update.downloadUrl || state.update.releasePage;
+    const targetUrl = state.update.releasePage || state.update.downloadUrl;
     if (!targetUrl) {
       showStatus("当前还没有可打开的更新地址。");
       return;
@@ -173,6 +173,10 @@ function renderDisplayModeButtons() {
 
 function renderUpdateSection() {
   elements.currentVersion.textContent = `当前版本 v${CURRENT_VERSION}`;
+  const openTarget = state.update.releasePage || state.update.downloadUrl;
+  elements.openUpdateButton.textContent = state.update.releasePage
+    ? "打开 GitHub 更新页"
+    : "下载更新";
 
   if (!state.update.configured) {
     elements.updateSummary.textContent = "还没有配置 GitHub 更新地址。";
@@ -184,7 +188,7 @@ function renderUpdateSection() {
   if (state.update.error) {
     elements.updateSummary.textContent = "更新检查失败";
     elements.updateNotes.textContent = state.update.error;
-    elements.openUpdateButton.classList.toggle("hidden", !state.update.releasePage);
+    elements.openUpdateButton.classList.toggle("hidden", !openTarget);
     return;
   }
 
@@ -203,7 +207,7 @@ function renderUpdateSection() {
     elements.updateNotes.textContent = "点击下方按钮，从 GitHub 检查是否有新版本。";
   }
 
-  elements.openUpdateButton.classList.toggle("hidden", !state.update.releasePage && !state.update.downloadUrl);
+  elements.openUpdateButton.classList.toggle("hidden", !openTarget);
 }
 
 async function persistPrefs() {
