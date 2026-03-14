@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, adapted for this repository.
 
+## [2.1.4] - 2026-03-15
+
+### Changed
+
+- Updated extension manifest to `2.1.4`
+- Synced packaged update-page behavior into `popup.js`
+- Updated remote release metadata for the `v2.1.4` package
+- Kept overall plugin feature set unchanged in this release
+
 ## [2.1.2] - 2026-03-14
 
 ### Changed

@@ -4,6 +4,7 @@ const UPDATE_STATE_KEY = "gpt_prompt_library_update_state";
 const DISPLAY_MODE_CHATGPT = "chatgpt_only";
 const DISPLAY_MODE_ALL = "all_sites";
 const CURRENT_VERSION = chrome.runtime.getManifest().version;
+const DEFAULT_UPDATE_PAGE = "https://github.com/tanyuxuan2323-design/ZRO2-PromptDock";
 
 const state = {
   items: [],
@@ -118,7 +119,7 @@ function bindEvents() {
   });
 
   elements.openUpdateButton.addEventListener("click", async () => {
-    const targetUrl = state.update.releasePage || state.update.downloadUrl;
+    const targetUrl = state.update.releasePage || state.update.downloadUrl || DEFAULT_UPDATE_PAGE;
     if (!targetUrl) {
       showStatus("当前还没有可打开的更新地址。");
       return;
@@ -173,22 +174,18 @@ function renderDisplayModeButtons() {
 
 function renderUpdateSection() {
   elements.currentVersion.textContent = `当前版本 v${CURRENT_VERSION}`;
-  const openTarget = state.update.releasePage || state.update.downloadUrl;
-  elements.openUpdateButton.textContent = state.update.releasePage
-    ? "打开 GitHub 更新页"
-    : "下载更新";
 
   if (!state.update.configured) {
     elements.updateSummary.textContent = "还没有配置 GitHub 更新地址。";
     elements.updateNotes.textContent = "先把远程 version.json 链接填进 background.js 里的 UPDATE_MANIFEST_URL。";
-    elements.openUpdateButton.classList.add("hidden");
+    elements.openUpdateButton.classList.remove("hidden");
     return;
   }
 
   if (state.update.error) {
     elements.updateSummary.textContent = "更新检查失败";
     elements.updateNotes.textContent = state.update.error;
-    elements.openUpdateButton.classList.toggle("hidden", !openTarget);
+    elements.openUpdateButton.classList.remove("hidden");
     return;
   }
 
@@ -207,7 +204,7 @@ function renderUpdateSection() {
     elements.updateNotes.textContent = "点击下方按钮，从 GitHub 检查是否有新版本。";
   }
 
-  elements.openUpdateButton.classList.toggle("hidden", !openTarget);
+  elements.openUpdateButton.classList.remove("hidden");
 }
 
 async function persistPrefs() {
